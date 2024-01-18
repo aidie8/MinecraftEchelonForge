@@ -41,7 +41,7 @@ public class PlayerDamageEvents {
     public static void onPlayerPotionApplied(PotionEvent.PotionAddedEvent event)
     {
         if (event.getEntity() instanceof PlayerEntity){
-            if(event.getEntity().level.isClientSide){
+            if(!event.getEntity().level.isClientSide){
                 if (event.getPotionEffect().getEffect().getCategory() == EffectType.HARMFUL)
                 {
                     MinecraftEchelonForge.getClientProxy().getUser().playerGotDebuff();
@@ -57,7 +57,7 @@ public class PlayerDamageEvents {
 
         if (event.getSource().getEntity() instanceof PlayerEntity)
         {
-            if(event.getSource().getEntity().level.isClientSide)
+            if(!event.getSource().getEntity().level.isClientSide)
             {
                 MinecraftEchelonForge.getClientProxy().getUser().killAggressiveMob();
             }

@@ -18,7 +18,7 @@ public class PlayerEvents {
     public static void PlayerBreakBlock(BlockEvent.BreakEvent event)
     {
 
-        if (event.getPlayer().level.isClientSide)
+        if (!event.getPlayer().level.isClientSide)
         {
             if (!(event.getPlayer() instanceof FakePlayer))
             {
@@ -31,7 +31,7 @@ public class PlayerEvents {
     {
         if ((event.getEntity() instanceof PlayerEntity))
         {
-            if (event.getEntity().level.isClientSide)
+            if (!event.getEntity().level.isClientSide)
             {
                 MinecraftEchelonForge.getClientProxy().getUser().placedBlock();
             }
