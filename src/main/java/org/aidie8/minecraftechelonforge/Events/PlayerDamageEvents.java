@@ -2,56 +2,60 @@ package org.aidie8.minecraftechelonforge.Events;
 
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.EffectType;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.aidie8.minecraftechelonforge.MinecraftEchelonForge;
+import org.aidie8.minecraftechelonforge.Networking.Network;
+import org.aidie8.minecraftechelonforge.Networking.Packets.*;
 
 @Mod.EventBusSubscriber
 public class PlayerDamageEvents {
 
 
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlayerDamageEvent(LivingHurtEvent event) // this happens after things like armor is taken into account
     {
         if (event.getEntity().level.isClientSide){
             if(event.getEntity() instanceof PlayerEntity)
             {
-                MinecraftEchelonForge.getClientProxy().getUser().playerDamaged(event.getAmount()); // send to sever modifying the points
+                Network.getNetwork().sendToPlayer(new PlayerDamagedPacket(event.getAmount()), (ServerPlayerEntity) event.getEntity());
             }
         }
     }
 
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlayerDeath(LivingDeathEvent event)
     {
         if (event.getEntity() instanceof PlayerEntity){
             if (((PlayerEntity) event.getEntity()).isDeadOrDying())
             {
-                MinecraftEchelonForge.getClientProxy().getUser().playerDied();
+                Network.getNetwork().sendToPlayer(new PlayerDeathPacket(), (ServerPlayerEntity) event.getEntity());
             }
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlayerPotionApplied(PotionEvent.PotionAddedEvent event)
     {
         if (event.getEntity() instanceof PlayerEntity){
             if(!event.getEntity().level.isClientSide){
                 if (event.getPotionEffect().getEffect().getCategory() == EffectType.HARMFUL)
                 {
-                    MinecraftEchelonForge.getClientProxy().getUser().playerGotDebuff();
+                    Network.getNetwork().sendToPlayer(new PlayerDebuffPacket(), (ServerPlayerEntity) event.getEntity());
                 }
             }
         }
 
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlayerAttackHostileMobEvent(LivingDeathEvent event)
     {
 
@@ -59,19 +63,21 @@ public class PlayerDamageEvents {
         {
             if(!event.getSource().getEntity().level.isClientSide)
             {
-                MinecraftEchelonForge.getClientProxy().getUser().killAggressiveMob();
+                if (!(event.getEntity() instanceof PlayerEntity)){
+                    Network.getNetwork().sendToPlayer(new PlayerKillHostileMob(), (ServerPlayerEntity) event.getEntity());
+                }
             }
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlayerHealedEvent(LivingHealEvent event)
     {
         if (event.getEntity() instanceof PlayerEntity)
         {
             if(event.getEntity().level.isClientSide)
             {
-                MinecraftEchelonForge.getClientProxy().getUser().healHealth(event.getAmount());
+                Network.getNetwork().sendToPlayer(new PlayerHealedPacket(event.getAmount()), (ServerPlayerEntity) event.getEntity());
             }
         }
     }

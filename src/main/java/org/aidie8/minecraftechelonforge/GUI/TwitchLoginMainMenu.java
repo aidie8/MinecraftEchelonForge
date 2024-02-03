@@ -11,6 +11,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.aidie8.minecraftechelonforge.MinecraftEchelonForge;
+import org.aidie8.minecraftechelonforge.Reference;
 
 @Mod.EventBusSubscriber
 public class TwitchLoginMainMenu {
@@ -28,6 +29,7 @@ public class TwitchLoginMainMenu {
             Button newButton = new ImageButton(event.getGui().width / 2 + 126, j + 72 + 12, 20, 20, 0, 0, 2, TWITCHLOGO, 64, 64, button -> {
                 System.out.println("Button pressed");
                 System.out.println("Button pressed");
+
                 MinecraftEchelonForge.getClientProxy().getUser().OpenTwitchLogin();
             })
             {

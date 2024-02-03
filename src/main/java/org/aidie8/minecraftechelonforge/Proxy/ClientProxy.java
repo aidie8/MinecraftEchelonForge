@@ -1,4 +1,4 @@
-package Proxy;
+package org.aidie8.minecraftechelonforge.Proxy;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

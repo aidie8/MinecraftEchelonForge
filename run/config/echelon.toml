@@ -1,0 +1,16 @@
+
+[Echelon]
+
+	#Basic Settings for Echelon
+	[Echelon.Basics]
+
+		[Echelon.Basics.LeaderBoard]
+			#This is to decide how the Leaderboard Should be displayed on the screen, Top shows top x based on the next settings,Relative with show the people around your score,Personal will only show your score 
+			#Allowed Values: TOP, RELATIVE, PERSONAL
+			Leaderboard = "TOP"
+
+		[Echelon.Basics."Leaderboard Range"]
+			#This is the range used from the leaderboard Type
+			#Range: 3 ~ 10
+			Range = 6
+

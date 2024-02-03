@@ -1,13 +1,10 @@
 package org.aidie8.minecraftechelonforge.Echelon;
-
-import com.EchelonSDK.Echelon;
-import com.EchelonSDK.EchelonTwitchController;
-import com.EchelonSDK.Responses.TwitchResponses;
+import org.aidie8.EchelonJavaSDK.EchelonSDK.Responses.*;
+import org.aidie8.EchelonJavaSDK.EchelonSDK.*;
 import net.minecraft.util.Util;
-import net.minecraft.world.storage.PlayerData;
-import org.aidie8.minecraftechelonforge.MinecraftEchelonForge;
 
-import java.io.IOException;
+
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -25,8 +22,10 @@ public class EchelonUser {
 
     public final float killMobsPoints = 10; //10 points for every aggressive mob killed
 
+    public final float brokenToolPoints = 10;
+
     //endregion
-    //region REMOVING POINTS
+    //regionREMOVING POINTS
         // \/\/
 
 
@@ -54,7 +53,7 @@ public class EchelonUser {
 
     public void addPoints(float points)
     {
-        echelon.addPlayerStat(playerData.uid,"points",points,(onComplete) ->{
+        echelon.addPlayerStat(playerData.uid,"points",Math.round(points),(onComplete) ->{
             Echelon.logger.info("Added points " + points);
         });
 
@@ -62,7 +61,7 @@ public class EchelonUser {
 
     public void removePoints(float points)
     {
-        echelon.addPlayerStat(playerData.uid,"points",-points,(onComplete) ->{
+        echelon.addPlayerStat(playerData.uid,"points",Math.round(-points),(onComplete) ->{
             if (onComplete.success){
                 Echelon.logger.info("Removed points " + points);
             }
@@ -76,7 +75,7 @@ public class EchelonUser {
         Util.backgroundExecutor().execute(()->{
             echelon.getPlayerStat(playerData.uid,"points",onComplete ->{
                 if (onComplete.success){
-                    removePoints(Float.parseFloat(onComplete.value) * 0.8f);
+                    removePoints(Float.parseFloat(onComplete.value) * diePoints);
                 }
             });
 
@@ -96,7 +95,7 @@ public class EchelonUser {
     }
     public void playerBrokenTool()
     {
-
+        addPoints(brokenToolPoints);
     }
     public void placedBlock()
     {
@@ -109,7 +108,7 @@ public class EchelonUser {
 
     public void healHealth(float health)
     {
-        addPoints(health);
+        addPoints(health *healPoints);
     }
 
     public void gainedEXP(float exp)
@@ -118,7 +117,7 @@ public class EchelonUser {
     }
     public void killAggressiveMob()
     {
-        addPoints(10);
+        addPoints(killMobsPoints);
     }
 
 
