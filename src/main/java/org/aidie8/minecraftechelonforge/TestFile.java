@@ -1,9 +1,9 @@
 package org.aidie8.minecraftechelonforge;
 
 import com.google.gson.Gson;
-import org.aidie8.EchelonJavaSDK.EchelonSDK.Echelon;
-import org.aidie8.EchelonJavaSDK.EchelonSDK.EchelonTwitchController;
-import org.aidie8.EchelonJavaSDK.EchelonSDK.Responses.TwitchResponses;
+import com.EchelonSDK.Echelon;
+import com.EchelonSDK.EchelonTwitchController;
+import com.EchelonSDK.Responses.TwitchResponses;
 import org.aidie8.minecraftechelonforge.Echelon.RewardsEnum;
 import org.aidie8.minecraftechelonforge.Networking.Network;
 import org.aidie8.minecraftechelonforge.Networking.Packets.PlayerClaimedRewardPacket;

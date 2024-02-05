@@ -1,6 +1,7 @@
 package org.aidie8.minecraftechelonforge.Echelon;
-import org.aidie8.EchelonJavaSDK.EchelonSDK.Responses.*;
-import org.aidie8.EchelonJavaSDK.EchelonSDK.*;
+import com.EchelonSDK.Responses.*;
+import com.EchelonSDK.*;
+
 import net.minecraft.util.Util;
 
 

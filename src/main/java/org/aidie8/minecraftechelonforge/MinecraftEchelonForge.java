@@ -1,5 +1,6 @@
 package org.aidie8.minecraftechelonforge;
 
+import com.EchelonSDK.APIResponse;
 import net.minecraftforge.fml.event.lifecycle.*;
 import org.aidie8.minecraftechelonforge.Proxy.ClientProxy;
 
@@ -24,6 +25,8 @@ import org.aidie8.minecraftechelonforge.Networking.Network;
 import org.aidie8.minecraftechelonforge.Networking.Packets.PlayerClaimedRewardPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil;
+
 import javax.net.ssl.SSLContext;
 import java.util.ArrayList;
 import java.util.ServiceLoader;
@@ -53,6 +56,8 @@ public class MinecraftEchelonForge {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,  () -> (mc, screen) -> new EchelonConfigGui(screen)));
         Reference.echelon = this;
         proxy = new ClientProxy();
+        Reference.file = new TestFile();
+        APIResponse test = new APIResponse();
 
     }
 

@@ -12,7 +12,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import org.aidie8.EchelonJavaSDK.EchelonSDK.Echelon;
+import com.EchelonSDK.Echelon;
 import org.aidie8.minecraftechelonforge.Configs.EchelonConfigs;
 import org.aidie8.minecraftechelonforge.Configs.EchelonConfigs.EchelonBasics.LeaderBoardTypes;
 import org.aidie8.minecraftechelonforge.Echelon.EchelonUser;
