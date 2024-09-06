@@ -10,7 +10,5 @@
 			Leaderboard = "TOP"
 
 		[Echelon.Basics."Leaderboard Range"]
-			#This is the range used from the leaderboard Type
-			#Range: 3 ~ 10
-			Range = 3
+			Range = 4
 

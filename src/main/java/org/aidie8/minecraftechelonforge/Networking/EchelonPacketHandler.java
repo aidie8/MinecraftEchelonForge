@@ -43,6 +43,8 @@ public class EchelonPacketHandler {
         registerMessage(newId(), PlayerKillHostileMob.class,PlayerKillHostileMob::new);
         registerMessage(newId(), PlayerDebuffPacket.class,PlayerDebuffPacket::new);
         registerMessage(newId(), PlayerClaimedRewardPacket.class, PlayerClaimedRewardPacket::new);
+        registerMessage(newId(), PlayerCraftPacket.class, PlayerCraftPacket::new);
+        registerMessage(newId(), PlayerSmeltPacket.class, PlayerSmeltPacket::new);
     }
     /**
      * Register a message into INSTANCE.

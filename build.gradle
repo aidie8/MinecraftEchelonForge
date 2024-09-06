@@ -175,13 +175,12 @@ dependencies {
         // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
         // http://www.gradle.org/docs/current/userguide/dependency_management.html
     shade group :'org.EchelonJavaSDK',name:"EchelonJavaSDK", version:'0.1.5' ,classifier:'slim'
-    shade "com.google.code.gson:gson:2.10.1"
-    shade 'org.java-websocket:Java-WebSocket:1.5.5'
-    shade 'org.apache.logging.log4j:log4j-api:2.22.1'
-    shade 'org.apache.logging.log4j:log4j-core:2.22.1'
     shade 'org.apache.httpcomponents:httpclient:4.5.14'
     shade 'commons-codec:commons-codec:1.16.0'
-    shade 'org.slf4j:slf4j-reload4j:2.0.11'
+    shade 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.21'
+    shade 'org.glassfish.tyrus:tyrus-client:1.21'
+
+
 
 
 
@@ -195,6 +194,9 @@ shadowJar {
     mergeServiceFiles()
     finalizedBy 'reobfShadowJar'
 
+    relocate "org.slf4j", "org.aidie8.relocated.slf4j"
+    relocate "javax.websocket", "org.aidie8.relocated.javax.websocket"
+    relocate "com.EchelonSDK", "org.aidie8.relocated.EchelonSDK"
 }
 
 
@@ -203,12 +205,12 @@ reobf { shadowJar{}}
 assemble.dependsOn shadowJar
 
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-tasks.register('relocateShadowJar', ConfigureShadowRelocation) {
-    target = tasks.shadowJar
-    prefix = "${project.group}.shadowed"
-}
-tasks.shadowJar.dependsOn tasks.relocateShadowJar
+//import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+//tasks.register('relocateShadowJar', ConfigureShadowRelocation) {
+//    target = tasks.shadowJar
+//   prefix = "${project.group}.shadowed"
+//}
+//tasks.shadowJar.dependsOn tasks.relocateShadowJar
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.

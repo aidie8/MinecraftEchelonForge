@@ -63,8 +63,8 @@ public class PlayerDamageEvents {
         {
             if(!event.getSource().getEntity().level.isClientSide)
             {
-                if (!(event.getEntity() instanceof PlayerEntity)){
-                    Network.getNetwork().sendToPlayer(new PlayerKillHostileMob(), (ServerPlayerEntity) event.getEntity());
+                if (!(event.getEntity() instanceof PlayerEntity) && (event.getSource().getEntity() instanceof PlayerEntity)){
+                    Network.getNetwork().sendToPlayer(new PlayerKillHostileMob(), (ServerPlayerEntity) event.getSource().getEntity());
                 }
             }
         }

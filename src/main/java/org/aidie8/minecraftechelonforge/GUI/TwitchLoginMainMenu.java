@@ -17,19 +17,18 @@ import org.aidie8.minecraftechelonforge.Reference;
 public class TwitchLoginMainMenu {
 
 
-    private static final ResourceLocation TWITCHLOGO = new ResourceLocation("minecraftechelonforge","textures/gui/twitchlogo.png");
+    private static final ResourceLocation TWITCHLOGO = new ResourceLocation(Reference.MODID,"textures/gui/twitchlogo.png");
 
     @SubscribeEvent
     public static  void onMainMenuOpen(GuiScreenEvent.InitGuiEvent.Post event)
     {
         if (event.getGui() instanceof MainMenuScreen)
         {
-
+            Minecraft.getInstance().getTextureManager().bind(TWITCHLOGO);
             int j = event.getGui().height / 4 + 48;
             Button newButton = new ImageButton(event.getGui().width / 2 + 126, j + 72 + 12, 20, 20, 0, 0, 2, TWITCHLOGO, 64, 64, button -> {
                 System.out.println("Button pressed");
-                System.out.println("Button pressed");
-                Reference.file.InitEchelon();
+
                 MinecraftEchelonForge.getClientProxy().getUser().OpenTwitchLogin();
             })
             {

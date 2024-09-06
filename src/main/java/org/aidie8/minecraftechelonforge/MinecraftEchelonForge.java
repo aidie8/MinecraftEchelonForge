@@ -1,6 +1,11 @@
 package org.aidie8.minecraftechelonforge;
 
-import com.EchelonSDK.APIResponse;
+import com.EchelonSDK.Echelon;
+import com.EchelonSDK.EchelonTwitchController;
+import com.EchelonSDK.Responses.APIResponse;
+import com.EchelonSDK.Responses.TwitchResponses;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import net.minecraftforge.fml.event.lifecycle.*;
 import org.aidie8.minecraftechelonforge.Proxy.ClientProxy;
 
@@ -56,8 +61,14 @@ public class MinecraftEchelonForge {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,  () -> (mc, screen) -> new EchelonConfigGui(screen)));
         Reference.echelon = this;
         proxy = new ClientProxy();
-        Reference.file = new TestFile();
-        APIResponse test = new APIResponse();
+        Gson gson = new Gson();
+        String testJson = gson.toJson(new APIResponse());
+        System.out.println("Test Json Output Text " + testJson);
+        APIResponse response = gson.fromJson(testJson,new TypeToken<APIResponse>(){}.getType() );
+        System.out.print("Converting it back test " + response);
+        InitEchelon();
+
+
 
     }
 
@@ -110,13 +121,6 @@ public class MinecraftEchelonForge {
     }
 
 
-    @SubscribeEvent
-    public void onFinalLoading(FMLLoadCompleteEvent loadCompleteEvent)
-    {
-        Reference.file = new TestFile();
-        Reference.file.InitEchelon();
-
-    }
     public static Logger LOGGER() {
         return LOGGER;
     }
@@ -127,6 +131,56 @@ public class MinecraftEchelonForge {
        return MinecraftEchelonForge.proxy;
     }
 
+    public void InitEchelon()
+    {
 
+        getClientProxy().getUser().initialiseEchelonSystem(Echelon.Environment.DEVELOPMENT,
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzcsImdhbWUiOjQ3LCJ0" +
+                        "eXBlIjoiZGV2LXByaXYifQ.cEzrUM-GoZRYWJsx7o_XU7cE-yoQmGo6UlakwSpghvM",true,(success,error) ->{
+                    if(!success){
+                        Echelon.INSTANCE.getLogger().warn("Echelon System could not be Initialised " + error);
+                    }
+                    else
+                    {
+                        Echelon.INSTANCE.getLogger().warn("Echelon System Initialised successfully");
+
+                    }
+
+                });
+
+
+
+
+        //TODO update these to the correct event hooks
+        getClientProxy().getUser().getEchelon().onPlayerRewardClaimed = this::onPlayerRewardClaimed;
+        getClientProxy().getUser().getEchelon().onAuthCompletedEvents.add(this::onAuthCompleted);
+        EchelonTwitchController.onTwitchAuthCompleted.add(this::onAuthCompletedTriggered);
+    }
+    private void onAuthCompleted(TwitchResponses.ClientToken tokenData, boolean success) {
+        Echelon.INSTANCE.logger.info("Twitch user Authorized: " + tokenData.name + " id " + tokenData.id + " data " + new Gson().toJson(tokenData));
+        getClientProxy().getUser().setPlayerData(tokenData);
+
+
+        //region startRewardsListener
+        ArrayList<String> testPlayers = new ArrayList<>();
+        testPlayers.add(tokenData.uid);
+
+        boolean rewardsListenerSuccess = getClientProxy().getUser().getEchelon().startPlayerRewardsListener(testPlayers);
+        MinecraftEchelonForge.LOGGER().info("Checking for unlocked rewards (" + rewardsListenerSuccess + ")");
+        //endregion
+
+    }
+
+    private void onAuthCompletedTriggered(TwitchResponses.ClientToken tokenData, boolean fromStoredCredentials)
+    {
+        for(EchelonTwitchController.onAuthComplete complete: getClientProxy().getUser().getEchelon().onAuthCompletedEvents)
+        {
+            complete.run(tokenData,fromStoredCredentials);
+        }
+    }
+
+    private void onPlayerRewardClaimed(String playerUID, String rewardId,String rewardToken,String value) {
+        Network.getNetwork().sendToServer(new PlayerClaimedRewardPacket(RewardsEnum.getByReward(Integer.parseInt(rewardId),value)));
+    }
 
 }

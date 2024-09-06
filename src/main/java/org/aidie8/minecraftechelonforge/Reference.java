@@ -6,5 +6,4 @@ public class Reference {
 
     public static MinecraftEchelonForge echelon;
 
-    public static TestFile file;
 }

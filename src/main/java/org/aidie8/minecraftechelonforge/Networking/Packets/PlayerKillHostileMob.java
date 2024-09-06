@@ -22,7 +22,7 @@ public class PlayerKillHostileMob implements IMessage {
     @Nullable
     @Override
     public LogicalSide getExecutionSide() {
-        return null;
+        return LogicalSide.CLIENT;
     }
 
     @Override

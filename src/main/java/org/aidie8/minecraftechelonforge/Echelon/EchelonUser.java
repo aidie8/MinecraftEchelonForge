@@ -25,6 +25,11 @@ public class EchelonUser {
 
     public final float brokenToolPoints = 10;
 
+    public final float craftFood = 10;
+    public final float smeltFood = 5;
+    public final float craftItem = 6;
+    public final float smeltItem = 2;
+
     //endregion
     //regionREMOVING POINTS
         // \/\/
@@ -42,29 +47,41 @@ public class EchelonUser {
     private TwitchResponses.ClientToken playerData;
     public void OpenTwitchLogin()
     {
+        if (!EchelonWebSocketClient.connected)
+        {
+            Echelon.getClient().init(this::AuthTwitch);
+        }else
+        {
+            AuthTwitch();
+        }
+
+    }
+
+
+    public void AuthTwitch()
+    {
         EchelonTwitchController.AuthWithTwitch(required->{
             try {
-                Echelon.logger.info(required.webUrl);
+                Echelon.INSTANCE.logger.info(required.webUrl);
                 Util.getPlatform().openUri(new URI(required.webUrl));
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
         });
     }
-
     public void addPoints(float points)
     {
-        echelon.addPlayerStat(playerData.uid,"points",Math.round(points),(onComplete) ->{
-            Echelon.logger.info("Added points " + points);
+        echelon.addPlayerStats(playerData.uid,"points",Math.round(points),(onComplete) ->{
+            Echelon.INSTANCE.logger.info("Added points " + points);
         });
 
     }
 
     public void removePoints(float points)
     {
-        echelon.addPlayerStat(playerData.uid,"points",Math.round(-points),(onComplete) ->{
+        echelon.addPlayerStats(playerData.uid,"points",Math.round(-points),(onComplete) ->{
             if (onComplete.success){
-                Echelon.logger.info("Removed points " + points);
+                Echelon.INSTANCE.logger.info("Removed points " + points);
             }
         });
         //remove points from echelon API
@@ -87,38 +104,69 @@ public class EchelonUser {
 
     public void playerDamaged(float damage)
     {
+        Echelon.INSTANCE.logger.info("Player Damaged");
         removePoints(damage * takeDamagePoints);
     }
 
     public void playerGotDebuff()
     {
+        Echelon.INSTANCE.logger.info("Gained De-buff");
         removePoints(getDeBuffPoints);
     }
     public void playerBrokenTool()
     {
+        Echelon.INSTANCE.logger.info("broke tool");
         addPoints(brokenToolPoints);
     }
     public void placedBlock()
     {
+        Echelon.INSTANCE.logger.info("Placed Block");
         addPoints(placingBlocksPoints);
     }
     public void breakBlock()
     {
+        Echelon.INSTANCE.logger.info("Break Block");
         addPoints(breakingBlockPoints);
     }
 
     public void healHealth(float health)
     {
+        Echelon.INSTANCE.logger.info("Heal Health");
         addPoints(health *healPoints);
     }
 
     public void gainedEXP(float exp)
     {
+        Echelon.INSTANCE.logger.info("Exp Points");
         addPoints(exp * getEXPPoints);
     }
     public void killAggressiveMob()
     {
+        Echelon.INSTANCE.logger.info("Kill Mob");
         addPoints(killMobsPoints);
+    }
+
+    public void smeltFoodItem()
+    {
+        Echelon.INSTANCE.logger.info("Smelted food item");
+        addPoints(smeltFood);
+    }
+
+    public void smeltItem()
+    {
+        Echelon.INSTANCE.logger.info("Smelted non-food item");
+        addPoints(smeltItem);
+    }
+
+    public void craftFoodItem()
+    {
+        Echelon.INSTANCE.logger.info("Crafted food item");
+        addPoints(craftFood);
+    }
+    public void craftItem()
+    {
+        Echelon.INSTANCE.logger.info("Crafted non-food item");
+        addPoints(craftItem);
     }
 
 
